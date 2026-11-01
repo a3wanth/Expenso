@@ -39,13 +39,22 @@ app/src/main/java/com/expenso/app/
 ```
 ## Screenshots
 
-<img width="720" height="1600" alt="Settings Screen" src="https://github.com/user-attachments/assets/528000ec-8054-4745-8033-ee6dbf08b1f2" />
-<img width="720" height="1600" alt="Expenso lock screen" src="https://github.com/user-attachments/assets/7b31dae3-6435-494d-9140-e520c3be30cd" />
-<img width="720" height="1600" alt="Home screen" src="https://github.com/user-attachments/assets/192a042b-a936-47ba-8d5d-d560a21d143d" />
-<img width="720" height="1600" alt="Expenses Screen" src="https://github.com/user-attachments/assets/58e9b24f-334e-475f-999f-51e42c78ec1f" />
-<img width="720" height="1600" alt="Analytics Screen" src="https://github.com/user-attachments/assets/389b6453-561a-4425-8f65-1eb093cc584f" />
-<img width="720" height="1600" alt="Emi and bills Screen" src="https://github.com/user-attachments/assets/63a32b28-3ae2-4c8c-a82b-27ce6ad9f0eb" />
+A quick tour of Expenso. Click any image to open it full size.
 
+<table>
+  <tr>
+    <td align="center"><img src="https://github.com/user-attachments/assets/192a042b-a936-47ba-8d5d-d560a21d143d" width="260" alt="Home screen"><br><b>Home</b></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/58e9b24f-334e-475f-999f-51e42c78ec1f" width="260" alt="Expenses screen"><br><b>Expenses</b></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://github.com/user-attachments/assets/389b6453-561a-4425-8f65-1eb093cc584f" width="260" alt="Analytics screen"><br><b>Analytics</b></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/63a32b28-3ae2-4c8c-a82b-27ce6ad9f0eb" width="260" alt="Bills and EMI screen"><br><b>Bills &amp; EMI</b></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://github.com/user-attachments/assets/528000ec-8054-4745-8033-ee6dbf08b1f2" width="260" alt="Settings screen"><br><b>Settings</b></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/7b31dae3-6435-494d-9140-e520c3be30cd" width="260" alt="App lock screen"><br><b>App lock</b></td>
+  </tr>
+</table>
 
 ## Build & run
 
