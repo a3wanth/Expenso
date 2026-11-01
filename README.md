@@ -37,6 +37,15 @@ app/src/main/java/com/expenso/app/
     ├── theme/      Colours, typography, Material theme
     └── navigation/ App navigation graph
 ```
+## Screenshots
+
+<img width="720" height="1600" alt="Settings Screen" src="https://github.com/user-attachments/assets/528000ec-8054-4745-8033-ee6dbf08b1f2" />
+<img width="720" height="1600" alt="Expenso lock screen" src="https://github.com/user-attachments/assets/7b31dae3-6435-494d-9140-e520c3be30cd" />
+<img width="720" height="1600" alt="Home screen" src="https://github.com/user-attachments/assets/192a042b-a936-47ba-8d5d-d560a21d143d" />
+<img width="720" height="1600" alt="Expenses Screen" src="https://github.com/user-attachments/assets/58e9b24f-334e-475f-999f-51e42c78ec1f" />
+<img width="720" height="1600" alt="Analytics Screen" src="https://github.com/user-attachments/assets/389b6453-561a-4425-8f65-1eb093cc584f" />
+<img width="720" height="1600" alt="Emi and bills Screen" src="https://github.com/user-attachments/assets/63a32b28-3ae2-4c8c-a82b-27ce6ad9f0eb" />
+
 
 ## Build & run
 
