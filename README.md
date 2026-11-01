@@ -1,6 +1,13 @@
-# Expenso
+<p align="center">
+  <img src="docs/logo.png" width="140" alt="Expenso logo" />
+</p>
 
-A local-first personal expense tracker for Android. All data (transactions, budgets, bills, loans, settings) is stored on the device — no account, no server, no cloud.
+<h1 align="center">Expenso</h1>
+
+<p align="center">
+  <b>A local-first personal expense tracker for Android.</b><br>
+  Track expenses, budgets, bills and loans. Everything stays on your device &mdash; no account, no server, no cloud.
+</p>
 
 ## Features
 
