@@ -9,6 +9,27 @@
   Track expenses, budgets, bills and loans. Everything stays on your device &mdash; no account, no server, no cloud.
 </p>
 
+<p align="center">
+  <a href="https://github.com/a3wanth/Expenso/releases/latest">
+    <img src="https://img.shields.io/badge/Download-APK-625BFF?style=for-the-badge&logo=android&logoColor=white" alt="Download the latest APK" />
+  </a>
+</p>
+
+<p align="center"><sub>Android 8.0+ &nbsp;·&nbsp; 18 MB &nbsp;·&nbsp; no ads, no accounts, no internet permission</sub></p>
+
+## Screenshots
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/192a042b-a936-47ba-8d5d-d560a21d143d" width="118" alt="Home screen" />
+  <img src="https://github.com/user-attachments/assets/58e9b24f-334e-475f-999f-51e42c78ec1f" width="118" alt="Expenses screen" />
+  <img src="https://github.com/user-attachments/assets/389b6453-561a-4425-8f65-1eb093cc584f" width="118" alt="Analytics screen" />
+  <img src="https://github.com/user-attachments/assets/63a32b28-3ae2-4c8c-a82b-27ce6ad9f0eb" width="118" alt="Bills and EMI screen" />
+  <img src="https://github.com/user-attachments/assets/528000ec-8054-4745-8033-ee6dbf08b1f2" width="118" alt="Settings screen" />
+  <img src="https://github.com/user-attachments/assets/7b31dae3-6435-494d-9140-e520c3be30cd" width="118" alt="App lock screen" />
+</p>
+
+<p align="center"><sub>Home · Expenses · Analytics · Bills &amp; EMI · Settings · App lock</sub></p>
+
 ## Features
 
 - **Home** — monthly summary, cumulative budget trend chart, weekly spending, upcoming bills
@@ -44,18 +65,6 @@ app/src/main/java/com/expenso/app/
     ├── theme/      Colours, typography, Material theme
     └── navigation/ App navigation graph
 ```
-## Screenshots
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/192a042b-a936-47ba-8d5d-d560a21d143d" width="118" alt="Home screen" />
-  <img src="https://github.com/user-attachments/assets/58e9b24f-334e-475f-999f-51e42c78ec1f" width="118" alt="Expenses screen" />
-  <img src="https://github.com/user-attachments/assets/389b6453-561a-4425-8f65-1eb093cc584f" width="118" alt="Analytics screen" />
-  <img src="https://github.com/user-attachments/assets/63a32b28-3ae2-4c8c-a82b-27ce6ad9f0eb" width="118" alt="Bills and EMI screen" />
-  <img src="https://github.com/user-attachments/assets/528000ec-8054-4745-8033-ee6dbf08b1f2" width="118" alt="Settings screen" />
-  <img src="https://github.com/user-attachments/assets/7b31dae3-6435-494d-9140-e520c3be30cd" width="118" alt="App lock screen" />
-</p>
-
-<p align="center"><sub>Home · Expenses · Analytics · Bills &amp; EMI · Settings · App lock</sub></p>
 
 ## Build & run
 
