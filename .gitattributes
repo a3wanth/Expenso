@@ -1,0 +1,15 @@
+# Normalise line endings so the repo behaves the same on Windows, macOS and Linux.
+* text=auto eol=lf
+
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.jar binary
+*.apk binary
+*.keystore binary
+*.jks binary

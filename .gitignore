@@ -1,0 +1,35 @@
+# --- Android / Gradle build output ---
+build/
+*/build/
+.gradle/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+captures/
+.externalNativeBuild/
+.cxx/
+
+# --- Local machine config (NEVER commit) ---
+local.properties
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+
+# --- IDE ---
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# --- Kotlin ---
+.kotlin/
+
+# --- OS / logs ---
+.DS_Store
+Thumbs.db
+*.log
+*.hprof
