@@ -6,12 +6,13 @@ plugins {
 
 // Main-version policy: bump the patch on every bug fix or feature, then build
 // `assembleMain` to produce Expenso-<versionName>-main.apk.
-val appVersionCode = 9
-val appVersionName = "1.0.8"
+val appVersionCode = 10
+val appVersionName = "1.0.9"
 
 android {
     namespace = "com.expenso.app"
     compileSdk = 34
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         applicationId = "com.expenso.app"
@@ -90,6 +91,7 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
 
     implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     testImplementation("junit:junit:4.13.2")

@@ -5,6 +5,8 @@ import android.content.Context
 import com.expenso.app.data.FinanceRepository
 import com.expenso.app.data.SettingsRepository
 import com.expenso.app.data.local.AppDatabase
+import com.expenso.app.notifications.ReminderNotifications
+import com.expenso.app.notifications.ReminderScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -16,11 +18,14 @@ class AppContainer(context: Context) {
     val database: AppDatabase = AppDatabase.getInstance(appContext)
     val repository = FinanceRepository(database)
     val settings = SettingsRepository(appContext)
+    val reminders = ReminderScheduler(appContext)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     fun bootstrap() {
+        ReminderNotifications.ensureChannel(appContext)
         scope.launch {
             val prefs = settings.preferences.first()
+            reminders.ensure(prefs)
             if (!prefs.categoriesSeeded) {
                 repository.seedCategoriesIfEmpty()
                 settings.markCategoriesSeeded()

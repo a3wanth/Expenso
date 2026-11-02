@@ -1,8 +1,13 @@
 package com.expenso.app.ui.settings
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,9 +37,12 @@ import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.NotificationsNone
+import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Visibility
@@ -63,6 +71,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.expenso.app.BuildConfig
 import com.expenso.app.ui.components.Avatar
@@ -76,6 +85,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 private val currencyOptions = listOf(
     "USD" to "US Dollar",
@@ -87,6 +99,14 @@ private val currencyOptions = listOf(
     "AUD" to "Australian Dollar",
     "SGD" to "Singapore Dollar"
 )
+
+private val reminderTimeOptions: List<Pair<String, String>> =
+    listOf(7, 8, 9, 10, 12, 17, 18, 20, 21).map { hour ->
+        hour.toString() to formatReminderTime(hour, 0)
+    }
+
+private fun formatReminderTime(hour: Int, minute: Int): String =
+    LocalTime.of(hour, minute).format(DateTimeFormatter.ofPattern("h:mm a", Locale.getDefault()))
 
 @Composable
 fun SettingsScreen(
@@ -110,6 +130,36 @@ fun SettingsScreen(
     var showClearConfirm by remember { mutableStateOf(false) }
     var showRemoveDemoConfirm by remember { mutableStateOf(false) }
     var exporting by remember { mutableStateOf(false) }
+    var showLeadTime by remember { mutableStateOf(false) }
+    var showCustomLead by remember { mutableStateOf(false) }
+    var showReminderTime by remember { mutableStateOf(false) }
+    var pendingTest by remember { mutableStateOf(false) }
+
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (!granted) {
+            Toast.makeText(
+                context,
+                "Notifications are blocked. Allow them in system settings to get reminders.",
+                Toast.LENGTH_LONG
+            ).show()
+        } else if (pendingTest) {
+            vm.sendTestReminder()
+        }
+        pendingTest = false
+    }
+
+    fun hasNotificationPermission(): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+            PackageManager.PERMISSION_GRANTED
+
+    fun ensureNotificationPermission() {
+        if (!hasNotificationPermission()) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -192,18 +242,59 @@ fun SettingsScreen(
                 SwitchRow(
                     icon = Icons.Filled.NotificationsNone,
                     title = "Notifications",
-                    subtitle = "Show due-date reminders in app",
+                    subtitle = "Allow local due-date reminders",
                     checked = prefs.notificationsEnabled,
-                    onCheckedChange = vm::setNotifications
+                    onCheckedChange = { enabled ->
+                        if (enabled) ensureNotificationPermission()
+                        vm.setNotifications(enabled)
+                    }
                 )
                 GroupDivider()
                 SwitchRow(
                     icon = Icons.Filled.Payments,
                     title = "Due reminders",
-                    subtitle = "Highlight overdue bills and EMIs",
+                    subtitle = "Alert me before bills, EMIs and card payments are due",
                     checked = prefs.dueReminders,
-                    onCheckedChange = vm::setDueReminders
+                    onCheckedChange = { enabled ->
+                        if (enabled) ensureNotificationPermission()
+                        vm.setDueReminders(enabled)
+                    }
                 )
+                if (prefs.dueReminders && prefs.notificationsEnabled) {
+                    GroupDivider()
+                    SettingsRow(
+                        icon = Icons.Filled.Schedule,
+                        title = "Remind me before",
+                        subtitle = when (prefs.reminderLeadDays) {
+                            0 -> "On the due date"
+                            1 -> "1 day before"
+                            else -> "${prefs.reminderLeadDays} days before"
+                        },
+                        onClick = { showLeadTime = true }
+                    )
+                    GroupDivider()
+                    SettingsRow(
+                        icon = Icons.Filled.NotificationsActive,
+                        title = "Reminder time",
+                        subtitle = formatReminderTime(prefs.reminderHour, prefs.reminderMinute),
+                        onClick = { showReminderTime = true }
+                    )
+                    GroupDivider()
+                    SettingsRow(
+                        icon = Icons.AutoMirrored.Filled.Send,
+                        title = "Send test notification",
+                        subtitle = "Check that reminders reach this phone",
+                        showChevron = false,
+                        onClick = {
+                            if (hasNotificationPermission()) {
+                                vm.sendTestReminder()
+                            } else {
+                                pendingTest = true
+                                ensureNotificationPermission()
+                            }
+                        }
+                    )
+                }
             }
             Spacer(Modifier.height(22.dp))
             SectionLabel("Security")
@@ -406,6 +497,50 @@ fun SettingsScreen(
                 showTheme = false
             },
             onDismiss = { showTheme = false }
+        )
+    }
+
+    if (showLeadTime) {
+        ChoiceDialog(
+            title = "Remind me before",
+            options = listOf(
+                "0" to "On the due date",
+                "1" to "1 day before",
+                "2" to "2 days before",
+                "3" to "3 days before",
+                "7" to "7 days before",
+                "custom" to "Custom…"
+            ),
+            selected = prefs.reminderLeadDays.toString(),
+            onSelect = { value ->
+                showLeadTime = false
+                if (value == "custom") showCustomLead = true else vm.setReminderLeadDays(value.toInt())
+            },
+            onDismiss = { showLeadTime = false }
+        )
+    }
+
+    if (showCustomLead) {
+        CustomLeadDialog(
+            initial = prefs.reminderLeadDays,
+            onDismiss = { showCustomLead = false },
+            onConfirm = { days ->
+                vm.setReminderLeadDays(days)
+                showCustomLead = false
+            }
+        )
+    }
+
+    if (showReminderTime) {
+        ChoiceDialog(
+            title = "Reminder time",
+            options = reminderTimeOptions,
+            selected = prefs.reminderHour.toString(),
+            onSelect = { value ->
+                vm.setReminderTime(value.toInt(), 0)
+                showReminderTime = false
+            },
+            onDismiss = { showReminderTime = false }
         )
     }
 
@@ -659,6 +794,50 @@ private fun ChoiceDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) { Text("Close") }
+        }
+    )
+}
+
+@Composable
+private fun CustomLeadDialog(
+    initial: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    var value by remember { mutableStateOf(initial.toString()) }
+    val parsed = value.toIntOrNull()
+    val valid = parsed != null && parsed in 0..30
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Custom reminder") },
+        text = {
+            Column {
+                Text(
+                    text = "How many days before the due date should Expenso remind you? Use 0 to be reminded on the day itself.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = LocalAppColors.current.muted
+                )
+                Spacer(Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = value,
+                    onValueChange = { input -> value = input.filter { it.isDigit() }.take(2) },
+                    label = { Text("Days before (0–30)") },
+                    singleLine = true,
+                    isError = !valid,
+                    keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { parsed?.let(onConfirm) }, enabled = valid) { Text("Save") }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
         }
     )
 }

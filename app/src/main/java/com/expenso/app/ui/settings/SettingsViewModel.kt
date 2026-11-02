@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.expenso.app.data.FinanceRepository
 import com.expenso.app.data.SettingsRepository
 import com.expenso.app.data.UserPreferences
+import com.expenso.app.notifications.ReminderScheduler
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -24,7 +26,8 @@ data class SettingsUiState(
 
 class SettingsViewModel(
     private val repository: FinanceRepository,
-    private val settings: SettingsRepository
+    private val settings: SettingsRepository,
+    private val reminders: ReminderScheduler
 ) : ViewModel() {
 
     val uiState: StateFlow<SettingsUiState> = combine(
@@ -56,11 +59,35 @@ class SettingsViewModel(
     }
 
     fun setNotifications(enabled: Boolean) {
-        viewModelScope.launch { settings.setNotifications(enabled) }
+        viewModelScope.launch {
+            settings.setNotifications(enabled)
+            reminders.sync(settings.preferences.first())
+        }
     }
 
     fun setDueReminders(enabled: Boolean) {
-        viewModelScope.launch { settings.setDueReminders(enabled) }
+        viewModelScope.launch {
+            settings.setDueReminders(enabled)
+            reminders.sync(settings.preferences.first())
+        }
+    }
+
+    fun setReminderLeadDays(days: Int) {
+        viewModelScope.launch {
+            settings.setReminderLeadDays(days)
+            reminders.sync(settings.preferences.first())
+        }
+    }
+
+    fun setReminderTime(hour: Int, minute: Int) {
+        viewModelScope.launch {
+            settings.setReminderTime(hour, minute)
+            reminders.sync(settings.preferences.first())
+        }
+    }
+
+    fun sendTestReminder() {
+        viewModelScope.launch { reminders.sendTest(settings.preferences.first()) }
     }
 
     fun setHideBalance(hidden: Boolean) {

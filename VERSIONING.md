@@ -29,3 +29,4 @@ reporting the plain main version name, with no `-debug` suffix.
 | 1.0.6   | 7           | New brand logo as launcher icon; profile keeps only name and adds 8 preset profile photos |
 | 1.0.7   | 8           | Home spending chart restyled like the analytics trend chart; day and date labels now align under each bar |
 | 1.0.8   | 9           | Home budget progress replaced with a cumulative spending line/area chart, budget target line and aligned date axis |
+| 1.0.9   | 10          | Local due-date reminders: 1/2/3/7-day or custom lead time, chosen reminder hour, test notification, per-cycle dedupe |

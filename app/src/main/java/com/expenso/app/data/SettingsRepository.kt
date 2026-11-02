@@ -6,7 +6,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -24,6 +26,11 @@ data class UserPreferences(
     val hideBalance: Boolean = false,
     val notificationsEnabled: Boolean = true,
     val dueReminders: Boolean = true,
+    val reminderLeadDays: Int = 2,
+    val reminderHour: Int = 9,
+    val reminderMinute: Int = 0,
+    val lastReminderDay: String = "",
+    val remindedKeys: Set<String> = emptySet(),
     val appLockEnabled: Boolean = false,
     val pinHash: String = "",
     val demoMode: Boolean = false,
@@ -53,6 +60,11 @@ class SettingsRepository(private val context: Context) {
         val hideBalance = booleanPreferencesKey("hide_balance")
         val notifications = booleanPreferencesKey("notifications")
         val dueReminders = booleanPreferencesKey("due_reminders")
+        val reminderLeadDays = intPreferencesKey("reminder_lead_days")
+        val reminderHour = intPreferencesKey("reminder_hour")
+        val reminderMinute = intPreferencesKey("reminder_minute")
+        val lastReminderDay = stringPreferencesKey("reminder_last_day")
+        val remindedKeys = stringSetPreferencesKey("reminder_notified_keys")
         val appLock = booleanPreferencesKey("app_lock")
         val pinHash = stringPreferencesKey("pin_hash")
         val demo = booleanPreferencesKey("demo_mode")
@@ -72,6 +84,11 @@ class SettingsRepository(private val context: Context) {
                 hideBalance = prefs[Keys.hideBalance] ?: false,
                 notificationsEnabled = prefs[Keys.notifications] ?: true,
                 dueReminders = prefs[Keys.dueReminders] ?: true,
+                reminderLeadDays = prefs[Keys.reminderLeadDays] ?: 2,
+                reminderHour = prefs[Keys.reminderHour] ?: 9,
+                reminderMinute = prefs[Keys.reminderMinute] ?: 0,
+                lastReminderDay = prefs[Keys.lastReminderDay] ?: "",
+                remindedKeys = prefs[Keys.remindedKeys] ?: emptySet(),
                 appLockEnabled = prefs[Keys.appLock] ?: false,
                 pinHash = prefs[Keys.pinHash] ?: "",
                 demoMode = prefs[Keys.demo] ?: false,
@@ -104,6 +121,25 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setDueReminders(enabled: Boolean) {
         context.settingsDataStore.edit { it[Keys.dueReminders] = enabled }
+    }
+
+    suspend fun setReminderLeadDays(days: Int) {
+        context.settingsDataStore.edit { it[Keys.reminderLeadDays] = days.coerceIn(0, 30) }
+    }
+
+    suspend fun setReminderTime(hour: Int, minute: Int) {
+        context.settingsDataStore.edit {
+            it[Keys.reminderHour] = hour.coerceIn(0, 23)
+            it[Keys.reminderMinute] = minute.coerceIn(0, 59)
+        }
+    }
+
+    /** Records which due items have already been announced so a reminder is not repeated. */
+    suspend fun markReminderRun(dayKey: String, notifiedKeys: Set<String>) {
+        context.settingsDataStore.edit {
+            it[Keys.lastReminderDay] = dayKey
+            it[Keys.remindedKeys] = notifiedKeys
+        }
     }
 
     suspend fun setAppLock(enabled: Boolean) {

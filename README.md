@@ -36,8 +36,9 @@
 - **Expenses** — add, edit and delete income/expense transactions with categories and notes
 - **Analytics** — category breakdown, monthly trend and budget progress
 - **Bills & Loans (EMI)** — recurring bills, calendar view, loan schedule tracking
+- **Due-date reminders** — local notifications 1, 2, 3, 7 or a custom number of days before a bill, EMI or card payment is due, at a time you choose
 - **Settings** — profile name + avatar, currency, theme, category management, app lock
-- Light and dark themes, Material 3, fully offline
+- Light and dark themes, Material 3, fully offline (notifications are local, not push)
 
 ## Tech stack
 
@@ -55,6 +56,7 @@
 ```
 app/src/main/java/com/expenso/app/
 ├── data/           Room entities, DAOs, repositories, finance math
+├── notifications/  Reminder scheduler, daily worker, notification channel
 └── ui/
     ├── home/       Home screen + view model
     ├── expenses/   Transaction list and editor
@@ -68,7 +70,7 @@ app/src/main/java/com/expenso/app/
 
 ## Build & run
 
-Requirements: JDK 17 and the Android SDK (platform 34, build-tools 34.0.0).
+Requirements: JDK 17 and the Android SDK (platform 34, build-tools 36.0.0).
 
 1. Point Gradle at your SDK by creating `local.properties` in the project root:
    ```
@@ -92,7 +94,7 @@ On Windows use `gradlew.bat` instead of `./gradlew`.
 
 Every fix or feature bumps the patch version (`appVersionName` and `appVersionCode` in `app/build.gradle.kts`) and ships a new `Expenso-<version>-main.apk`. See [VERSIONING.md](VERSIONING.md) for the full history.
 
-Current version: **1.0.8** (versionCode 9).
+Current version: **1.0.9** (versionCode 10).
 
 ## License
 

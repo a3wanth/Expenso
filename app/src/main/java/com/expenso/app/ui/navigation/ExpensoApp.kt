@@ -262,7 +262,7 @@ private fun MainNavigation(rootViewModel: RootViewModel) {
 
             composable(ROUTE_SETTINGS) {
                 val vm: SettingsViewModel = viewModel(
-                    factory = vmFactory { SettingsViewModel(container.repository, container.settings) }
+                    factory = vmFactory { SettingsViewModel(container.repository, container.settings, container.reminders) }
                 )
                 SettingsScreen(
                     vm = vm,
